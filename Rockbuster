@@ -1,0 +1,34 @@
+# Common Table Expression showing top 5 customers in each country 
+
+SELECT A.customer_id, A.first_name AS "customer first name", A.last_name AS "customer last name", D.country, C.city,
+SUM(E.amount) AS "total amount paid"
+
+  FROM customer A
+  INNER JOIN address B ON A.address_id=B.address_id
+  INNER JOIN city C ON B.city_id=C.city_id
+  INNER JOIN country D ON C.country_id=D.country_id
+  INNER JOIN payment E ON A.customer_id=E.customer_id
+  WHERE city IN ('Aurora', 'Acua', 'Citrus Heights', 'Iwaki', 'Ambattur', 'Shanwei', Teboksary', 'So Leopoldo', 'Tianjin', 'Cianjur')
+
+GROUP BY country, city, first_name, last_name, A.customer_id
+  ORDER BY "total amount paid" DESC
+  LIMIT 5)
+
+SELECT C.city, COUNT(A.customer_id) as "Number of Customers"
+  From customer A
+  INNER JOIN address B ON A.address_id=B.address_id
+  INNER JOIN city C ON B.city_id=C.city_id
+  INNER JOIN country D ON C.country_id=D.country_id
+  WHERE D.country IN (
+SELECT D.country
+  FROM customer A
+  INNER JOIN address B ON A.address_id=address_id
+  INNER JOIN city C ON B.city_id=C.city_id
+  INNER JOIN country D ON C.country_id=D.country_id
+  GROUP BY D.country
+  ORDER BY COUNT(A.customer_id) DESC
+  LIMIT 10
+)
+GROUP BY C.city
+ORDER BY COUNT(A.customer_id) DESC
+LIMIT 10;
